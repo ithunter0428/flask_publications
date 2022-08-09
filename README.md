@@ -27,7 +27,7 @@ flask db upgrade
 
 ## Usage
 
-### Unit tests
+### API tests
 
 ```bash
 python -m pytest tests/
