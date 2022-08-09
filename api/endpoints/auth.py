@@ -35,7 +35,7 @@ def token_required(f):
         if not token or token in blacklist_token:
             return flask.make_response('A valid token is missing.', 401)
         try:
-            jwt.decode(token, os.getenv('SECRET_KEY'))
+            jwt.decode(token, os.getenv('SECRET_KEY'), algorithms=["HS256"])
         except:
             return flask.make_response('The token is invalid.', 401)
         return f(*args, **kwargs)
@@ -53,9 +53,9 @@ class LoginUser(Resource):
         user = controller.get_user_by_filter(email=data['email'], dump=False)
         if user and check_password_hash(user.password, data['password']):
             exp = datetime.datetime.utcnow() + datetime.timedelta(minutes=30)
-            token = jwt.encode({'email': user.email, 'exp': exp},
-                               os.getenv('SECRET_KEY'))
-            return flask.jsonify({'token': token.decode('UTF-8')})
+            token = jwt.encode({'email': user.email, 'exp': exp}, 
+                               os.getenv('SECRET_KEY'), algorithm="HS256")
+            return flask.jsonify({'token': token})
         return flask.make_response('Could not verify.', 401, {
             'WWW.Authentication': 'Basic realm: "login required"'
         })
