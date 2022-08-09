@@ -1,8 +1,8 @@
 
 import flask
 from flask import Response
-import flask_restplus
-from flask_restplus import Resource
+import flask_restx
+from flask_restx import Resource
 
 from api.api import api
 import api.endpoints.auth as auth
@@ -11,14 +11,14 @@ from Controller.RessourceController import RessourceController
 comment_ns = api.namespace('comments')
 
 insert_comment_model = comment_ns.model('Comment insert', {
-    'comment': flask_restplus.fields.String(required=True),
-    'character_id': flask_restplus.fields.Integer(),
-    'episode_id': flask_restplus.fields.Integer()
+    'comment': flask_restx.fields.String(required=True),
+    'character_id': flask_restx.fields.Integer(),
+    'episode_id': flask_restx.fields.Integer()
 })
 
 
 update_comment_model = comment_ns.model('Comment update', {
-    'comment': flask_restplus.fields.String(required=True,)
+    'comment': flask_restx.fields.String(required=True,)
 })
 
 parser = api.parser()

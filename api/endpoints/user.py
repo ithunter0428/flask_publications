@@ -1,8 +1,8 @@
 
 import flask
 from flask import Response
-import flask_restplus
-from flask_restplus import Resource
+import flask_restx
+from flask_restx import Resource
 import uuid
 from werkzeug.security import generate_password_hash
 
@@ -13,9 +13,9 @@ from Controller.UserController import UserController
 user_ns = api.namespace('users')
 
 user_model = user_ns.model('User insert', {
-    'name': flask_restplus.fields.String(required=True),
-    'email': flask_restplus.fields.String(required=True),
-    'password': flask_restplus.fields.String(required=True)
+    'name': flask_restx.fields.String(required=True),
+    'email': flask_restx.fields.String(required=True),
+    'password': flask_restx.fields.String(required=True)
 })
 
 

@@ -3,8 +3,8 @@ import datetime
 from dotenv import load_dotenv
 import flask
 from flask import Response
-import flask_restplus
-from flask_restplus import Resource
+import flask_restx
+from flask_restx import Resource
 from functools import wraps
 import os
 import jwt
@@ -18,8 +18,8 @@ load_dotenv()
 auth_ns = api.namespace('auth', validate=True)
 
 login_user_model = auth_ns.model('User login', {
-    'email': flask_restplus.fields.String(required=True),
-    'password': flask_restplus.fields.String(required=True)
+    'email': flask_restx.fields.String(required=True),
+    'password': flask_restx.fields.String(required=True)
 })
 
 blacklist_token = set()

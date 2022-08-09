@@ -1,5 +1,5 @@
 Flask
-flask-restplus
+flask-restx
 Flask-SQLAlchemy
 flask-marshmallow
 Flask-Migrate
@@ -8,7 +8,7 @@ python-dotenv
 itsdangerous
 marshmallow
 marshmallow-sqlalchemy
-Werkzeug
+Werkzeug==2.1.2
 SQLAlchemy
 PyJWT
 pytest

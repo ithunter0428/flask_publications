@@ -1,7 +1,7 @@
 
 import flask
 from flask import Response
-from flask_restplus import Resource
+from flask_restx import Resource
 
 from api.api import api
 import api.endpoints.auth as auth
