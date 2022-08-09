@@ -1,11 +1,12 @@
-
+import os
 import flask
 from flask import Response
 import flask_restx
 from flask_restx import Resource
 import uuid
 from werkzeug.security import generate_password_hash
-
+from werkzeug.utils import secure_filename
+from flask import current_app as app
 from api.api import api
 import api.endpoints.auth as auth
 from Controller.UserController import UserController
@@ -44,11 +45,15 @@ class User(Resource):
         data = flask.request.json
         hashed_password = generate_password_hash(data['password'],
                                                  method='sha256')
+        avatar_file = flask.request.files['avatar']
+        avatar_path = os.path.join(app.config['UPLOAD_PATH'], secure_filename(avatar_file.filename))
+        avatar_file.save(avatar_path)
         res = controller.add_user(
             public_id=str(uuid.uuid4()),
             fullname=data['fullname'],
             password=hashed_password,
-            email=data['email']
+            email=data['email'],
+            avatar=avatar_path,
         )
         if res:
             return flask.make_response('Registered successfully.', 201)

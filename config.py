@@ -8,6 +8,7 @@ class Config(object):
     SQLALCHEMY_ECHO = False
     SQLALCHEMY_DATABASE_URI = 'sqlite:///:memory:'
     SQLALCHEMY_TRACK_MODIFICATIONS = False
+    UPLOAD_PATH = 'static/uploads'
 
 
 class ProductionConfig(Config):
