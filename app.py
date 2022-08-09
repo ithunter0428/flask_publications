@@ -5,6 +5,7 @@ import os
 
 from Controller.auth import auth_ns
 from Controller.user import user_ns
+from Controller.publication import publication_ns
 from database import db
 from flask_migrate import Migrate
 from utils.api import api
@@ -25,6 +26,7 @@ def initialize_app(flask_app):
 
     api.init_app(blueprint)
     api.add_namespace(auth_ns)
+    api.add_namespace(publication_ns)
     api.add_namespace(user_ns)
     flask_app.register_blueprint(blueprint)
     db.init_app(flask_app)

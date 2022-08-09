@@ -24,7 +24,6 @@ login_user_model = auth_ns.model('User login', {
 
 blacklist_token = set()
 
-
 def token_required(f):
     """Verify if the token is valid."""
     @wraps(f)
@@ -35,10 +34,11 @@ def token_required(f):
         if not token or token in blacklist_token:
             return flask.make_response('A valid token is missing.', 401)
         try:
-            jwt.decode(token, os.getenv('SECRET_KEY'), algorithms=["HS256"])
+            user_info = jwt.decode(token, os.getenv('SECRET_KEY'), algorithms=["HS256"])
         except:
             return flask.make_response('The token is invalid.', 401)
-        return f(*args, **kwargs)
+        user = UserService().get_user_by_filter(dump=False, email=user_info['email'])
+        return f(*args, **kwargs, user=user)
     return decorator
 
 
@@ -46,7 +46,7 @@ def token_required(f):
 class LoginUser(Resource):
 
     @auth_ns.doc(body=login_user_model)
-    def post(self) -> Response:
+    def post(self, *args, **kwargs) -> Response:
         """Logs the user and returns a token. Token needed to use the API."""
         service = UserService()
         data = flask.request.json
@@ -65,7 +65,7 @@ class LoginUser(Resource):
 class LogoutUser(Resource):
 
     @token_required
-    def post(self) -> Response:
+    def post(self, *args, **kwargs) -> Response:
         """Logout the user (blacklist the token)."""
         token = flask.request.headers.environ['HTTP_AUTHORIZATION']
         blacklist_token.add(token)

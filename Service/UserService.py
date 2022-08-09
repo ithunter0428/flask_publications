@@ -13,7 +13,7 @@ class UserService:
         users = User.query.all()
         return [schema.dump(user) for user in users]
 
-    def get_user(self, user_id: int) -> str:
+    def get_user(self, user_id: int, dump = True) -> str:
         """Retrieves one user from the database based on user ID.
 
         Args:
@@ -21,7 +21,7 @@ class UserService:
         """
         schema = UserSchema()
         user = User.query.filter(User.id == user_id).first_or_404()
-        return schema.dump(user)
+        return schema.dump(user) if dump else user
 
     def get_user_by_filter(self, dump: bool = True, **filters):
         """Retrieves one user from the database based on filters.
@@ -59,7 +59,7 @@ class UserService:
             user_id: User ID.
             values: New user values such as name, email, password.
         """
-        obj = self.get_user(user_id)
+        obj = self.get_user(user_id, dump=False)
         for attr, value in values.items():
             obj.__setattr__(attr, value)
         db.session.commit()
@@ -70,6 +70,11 @@ class UserService:
         Args:
             user_id: User ID.
         """
-        obj = self.get_user(user_id)
+        obj = self.get_user(user_id, dump=False)
         db.session.delete(obj)
+        db.session.commit()
+
+    def update_photo(self, user_id: int, photo_url):
+        obj = self.get_user(user_id, dump=False)
+        obj.avatar = photo_url
         db.session.commit()

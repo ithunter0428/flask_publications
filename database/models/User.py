@@ -9,3 +9,4 @@ class User(db.Model):
     email = db.Column(db.String(70), unique=True, nullable=False)
     password = db.Column(db.String(100), nullable=False)
     avatar = db.Column(db.String(100), nullable=True)
+    publications = db.relationship("Publication")
