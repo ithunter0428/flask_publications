@@ -1,9 +1,7 @@
-
 from flask_restx import Api
 
 authorizations = {"Bearer Auth": {"type": "apiKey", "in": "header",
-                                  "name": "Authorization"}}
-
+                                    "name": "Authorization"}}
 api = Api(
     title='Flask API with JWT-Based Authentication and for Publications Management',
     doc='/doc',

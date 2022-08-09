@@ -1,17 +1,42 @@
 
-from dao.UserDao import UserDao
-from database.schema.UserSchema import UserSchema
+import sqlalchemy
 
+from database.schema.UserSchema import UserSchema
+from database.models.User import User
+from database import db
 
 class UserService:
 
-    def __init__(self):
-        self.dao = UserDao()
-        self.schema = UserSchema()
-
     def get_users(self) -> list:
         """Retrieves users from the database."""
-        return self.dao.get_users()
+        schema = UserSchema()
+        users = User.query.all()
+        return [schema.dump(user) for user in users]
+
+    def get_user(self, user_id: int) -> str:
+        """Retrieves one user from the database based on user ID.
+
+        Args:
+            user_id: User ID.
+        """
+        schema = UserSchema()
+        user = User.query.filter(User.id == user_id).first_or_404()
+        return schema.dump(user)
+
+    def get_user_by_filter(self, dump: bool = True, **filters):
+        """Retrieves one user from the database based on filters.
+
+        Args:
+            dump: If True, returns user dump, otherwise returns user object.
+            filters: Used for filters the users.
+            It's possible to filter on all users attributes such as name,
+            email, password.
+        """
+        user = User.query.filter_by(**filters).first_or_404()
+        if dump is False:
+            return user
+        schema = UserSchema()
+        return schema.dump(user)
 
     def add_user(self, **values):
         """Inserts user to the database.
@@ -19,34 +44,25 @@ class UserService:
         Args:
             values: User values such as name, email, password.
         """
-        self.dao.add_user(**values)
+        try:
+            new = User(**values)
+            db.session.add(new)
+            db.session.commit()
+        except sqlalchemy.exc.IntegrityError:
+            return False
+        return True
 
-    def get_user(self, user_id: int):
-        """Retrieves one user from the database based on user ID.
-
-        Args:
-            user_id: User ID.
-        """
-        return self.dao.get_user(user_id)
-
-    def get_user_by_filter(self, **filters):
-        """Retrieves one user from the database based on filters.
-
-        Args:
-            filters: Used for filters the users.
-            It's possible to filter on all users attributes such as name,
-            email, password.
-        """
-        return self.dao.get_user_by_filter(**filters)
-
-    def update_user(self, user_id: int, **values):
+    def update_user(self, user_id: int, values: dict):
         """Modifies a user to the database.
 
         Args:
             user_id: User ID.
             values: New user values such as name, email, password.
         """
-        self.dao.update_user(user_id, **values)
+        obj = self.get_user(user_id)
+        for attr, value in values.items():
+            obj.__setattr__(attr, value)
+        db.session.commit()
 
     def delete_user(self, user_id: int):
         """Deletes a user to the database.
@@ -54,4 +70,6 @@ class UserService:
         Args:
             user_id: User ID.
         """
-        self.dao.delete_user(user_id)
+        obj = self.get_user(user_id)
+        db.session.delete(obj)
+        db.session.commit()

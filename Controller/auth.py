@@ -10,8 +10,8 @@ import os
 import jwt
 from werkzeug.security import check_password_hash
 
-from api.api import api
-from Controller.UserController import UserController
+from utils.api import api
+from Service.UserService import UserService
 
 load_dotenv()
 
@@ -48,9 +48,9 @@ class LoginUser(Resource):
     @auth_ns.doc(body=login_user_model)
     def post(self) -> Response:
         """Logs the user and returns a token. Token needed to use the API."""
-        controller = UserController()
+        service = UserService()
         data = flask.request.json
-        user = controller.get_user_by_filter(email=data['email'], dump=False)
+        user = service.get_user_by_filter(email=data['email'], dump=False)
         if user and check_password_hash(user.password, data['password']):
             exp = datetime.datetime.utcnow() + datetime.timedelta(minutes=30)
             token = jwt.encode({'email': user.email, 'exp': exp}, 

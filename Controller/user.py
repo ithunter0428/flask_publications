@@ -7,9 +7,9 @@ import uuid
 from werkzeug.security import generate_password_hash
 from werkzeug.utils import secure_filename
 from flask import current_app as app
-from api.api import api
-import api.endpoints.auth as auth
-from Controller.UserController import UserController
+from utils.api import api
+from . import auth
+from Service.UserService import UserService
 import re
 
 user_ns = api.namespace('users')
@@ -29,7 +29,7 @@ class User(Resource):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self._controller = UserController()
+        self._controller = UserService()
 
     @auth.token_required
     def get(self) -> Response:
@@ -45,7 +45,6 @@ class User(Resource):
             201: Registered successfully.
             409: User already registered.
         """
-        controller = UserController()
         data = flask.request.json
 
         # validate email
@@ -55,7 +54,7 @@ class User(Resource):
         # add user
         hashed_password = generate_password_hash(data['password'],
                                                  method='sha256')
-        res = controller.add_user(
+        res = self._controller.add_user(
             fullname=data['fullname'],
             password=hashed_password,
             email=data['email'],
@@ -71,7 +70,7 @@ class Users(Resource):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self._controller = UserController()
+        self._controller = UserService()
 
     @auth.token_required
     def get(self, id: int) -> Response:

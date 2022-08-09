@@ -3,14 +3,11 @@ from dotenv import load_dotenv
 from flask import Flask, Blueprint
 import os
 
-from api.endpoints.auth import auth_ns
-from api.endpoints.character import character_ns
-from api.endpoints.comment import comment_ns
-from api.endpoints.episode import episode_ns
-from api.endpoints.user import user_ns
-from api.api import api
+from Controller.auth import auth_ns
+from Controller.user import user_ns
 from database import db
 from flask_migrate import Migrate
+from utils.api import api
 
 load_dotenv()
 
@@ -25,11 +22,9 @@ migrate = Migrate(app, db)
 def initialize_app(flask_app):
     """Inits the flask application."""
     blueprint = Blueprint('api', __name__, url_prefix='/api')
+
     api.init_app(blueprint)
     api.add_namespace(auth_ns)
-    api.add_namespace(episode_ns)
-    api.add_namespace(character_ns)
-    api.add_namespace(comment_ns)
     api.add_namespace(user_ns)
     flask_app.register_blueprint(blueprint)
     db.init_app(flask_app)
