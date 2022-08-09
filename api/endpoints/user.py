@@ -14,7 +14,7 @@ from Controller.UserController import UserController
 user_ns = api.namespace('users')
 
 user_model = user_ns.model('User insert', {
-    'name': flask_restx.fields.String(required=True),
+    'fullname': flask_restx.fields.String(required=True),
     'email': flask_restx.fields.String(required=True),
     'password': flask_restx.fields.String(required=True)
 })
@@ -45,15 +45,10 @@ class User(Resource):
         data = flask.request.json
         hashed_password = generate_password_hash(data['password'],
                                                  method='sha256')
-        avatar_file = flask.request.files['avatar']
-        avatar_path = os.path.join(app.config['UPLOAD_PATH'], secure_filename(avatar_file.filename))
-        avatar_file.save(avatar_path)
         res = controller.add_user(
-            public_id=str(uuid.uuid4()),
             fullname=data['fullname'],
             password=hashed_password,
             email=data['email'],
-            avatar=avatar_path,
         )
         if res:
             return flask.make_response('Registered successfully.', 201)

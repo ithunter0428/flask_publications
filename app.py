@@ -10,6 +10,7 @@ from api.endpoints.episode import episode_ns
 from api.endpoints.user import user_ns
 from api.api import api
 from database import db
+from flask_migrate import Migrate
 
 load_dotenv()
 
@@ -17,6 +18,8 @@ app = Flask(__name__)
 app.config['SECRET_KEY'] = os.getenv('SECRET_KEY')
 env_config = os.getenv("APP_SETTINGS", "config.DevelopmentConfig")
 app.config.from_object(env_config)
+
+migrate = Migrate(app, db)
 
 
 def initialize_app(flask_app):
@@ -31,11 +34,10 @@ def initialize_app(flask_app):
     flask_app.register_blueprint(blueprint)
     db.init_app(flask_app)
 
+initialize_app(app)
 
 def main():
-    initialize_app(app)
     app.run()
-
 
 if __name__ == "__main__":
     main()

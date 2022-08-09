@@ -53,7 +53,7 @@ class LoginUser(Resource):
         user = controller.get_user_by_filter(email=data['email'], dump=False)
         if user and check_password_hash(user.password, data['password']):
             exp = datetime.datetime.utcnow() + datetime.timedelta(minutes=30)
-            token = jwt.encode({'public_id': user.public_id, 'exp': exp},
+            token = jwt.encode({'email': user.email, 'exp': exp},
                                os.getenv('SECRET_KEY'))
             return flask.jsonify({'token': token.decode('UTF-8')})
         return flask.make_response('Could not verify.', 401, {
