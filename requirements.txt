@@ -1,0 +1,14 @@
+Flask
+flask-restplus
+Flask-SQLAlchemy
+flask-marshmallow
+Flask-Migrate
+Flask-Script
+python-dotenv
+itsdangerous
+marshmallow
+marshmallow-sqlalchemy
+Werkzeug
+SQLAlchemy
+PyJWT
+pytest
