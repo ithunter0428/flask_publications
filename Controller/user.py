@@ -82,6 +82,15 @@ class User(Resource):
         else:
             return flask.make_response("User already registered.", 409)
 
+@user_ns.route("/info")
+class Users(Resource):
+    @auth.token_required
+    def get(self, *args, **kwargs) -> Response:
+        """Retrieves logined user info"""
+        controller = UserService()
+        user = controller.get_user(kwargs["user"].id)
+        return flask.jsonify(user)
+
 
 @user_ns.route("/<int:id>")
 class Users(Resource):
@@ -89,16 +98,6 @@ class Users(Resource):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self._controller = UserService()
-
-    @auth.token_required
-    def get(self, id: int, *args, **kwargs) -> Response:
-        """Retrieves one user from the database.
-
-        Args:
-            id: User ID.
-        """
-        user = self._controller.get_user(id)
-        return flask.jsonify(user)
 
     @user_ns.doc(body=user_update_model)
     @auth.token_required
@@ -134,6 +133,7 @@ class UserAvatar(Resource):
     @auth.token_required
     @user_ns.expect(upload_parser)
     def post(self, *args, **kwargs) -> Response:
+        """Update logined user's photo"""
         avatar_file = flask.request.files["avatar"]
         avatar_path = os.path.join(
             app.config["UPLOAD_PATH"], str(uuid.uuid4()) + '-' + secure_filename(avatar_file.filename)

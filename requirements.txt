@@ -13,3 +13,4 @@ SQLAlchemy
 PyJWT
 pytest
 psycopg2-binary
+requests

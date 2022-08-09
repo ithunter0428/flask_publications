@@ -44,12 +44,12 @@ class UserService:
         Args:
             values: User values such as name, email, password.
         """
-        try:
-            new = User(**values)
-            db.session.add(new)
-            db.session.commit()
-        except sqlalchemy.exc.IntegrityError:
-            return False
+        # try:
+        new = User(**values)
+        db.session.add(new)
+        db.session.commit()
+        # except sqlalchemy.exc.IntegrityError:
+        #     return False
         return True
 
     def update_user(self, user_id: int, values: dict):
