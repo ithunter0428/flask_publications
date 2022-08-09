@@ -10,6 +10,7 @@ from flask import current_app as app
 from api.api import api
 import api.endpoints.auth as auth
 from Controller.UserController import UserController
+import re
 
 user_ns = api.namespace('users')
 
@@ -19,6 +20,9 @@ user_model = user_ns.model('User insert', {
     'password': flask_restx.fields.String(required=True)
 })
 
+
+def valid_email(email):
+  return bool(re.search(r"^[\w\.\+\-]+\@[\w]+\.[a-z]{2,3}$", email))
 
 @user_ns.route('/')
 class User(Resource):
@@ -43,6 +47,12 @@ class User(Resource):
         """
         controller = UserController()
         data = flask.request.json
+
+        # validate email
+        if not valid_email(data['email']):
+            return flask.make_response('Email is not correct', 400)
+        
+        # add user
         hashed_password = generate_password_hash(data['password'],
                                                  method='sha256')
         res = controller.add_user(
