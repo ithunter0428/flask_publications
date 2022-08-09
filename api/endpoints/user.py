@@ -46,7 +46,7 @@ class User(Resource):
                                                  method='sha256')
         res = controller.add_user(
             public_id=str(uuid.uuid4()),
-            name=data['name'],
+            fullname=data['fullname'],
             password=hashed_password,
             email=data['email']
         )

@@ -5,7 +5,7 @@ authorizations = {"Bearer Auth": {"type": "apiKey", "in": "header",
                                   "name": "Authorization"}}
 
 api = Api(
-    title='Flask API with JWT-Based Authentication',
+    title='Flask API with JWT-Based Authentication and for Publications Management',
     doc='/doc',
     version="1.0",
     description="Welcome to the Swagger UI documentation site!",
