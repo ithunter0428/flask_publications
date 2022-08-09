@@ -3,6 +3,7 @@ from database import db
 
 
 class User(db.Model):
+    """User Model"""
 
     id = db.Column(db.Integer, primary_key=True)
     fullname = db.Column(db.String(100), nullable=False)

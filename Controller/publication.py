@@ -24,6 +24,7 @@ publication_model = publication_ns.model('Publication insert', {
 
 @publication_ns.route('/')
 class Publication(Resource):
+    """Related to Publication list and create API"""
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -59,6 +60,7 @@ class Publication(Resource):
 
 @publication_ns.route('/<int:id>')
 class Publications(Resource):
+    """Related to Publication fetch, update and delete"""
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)

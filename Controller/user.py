@@ -45,6 +45,7 @@ def valid_email(email):
 
 @user_ns.route("/")
 class User(Resource):
+    """Realted to user list and create"""
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self._controller = UserService()
@@ -84,6 +85,7 @@ class User(Resource):
 
 @user_ns.route("/<int:id>")
 class Users(Resource):
+    """Related to user fetch, update and delete"""
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self._controller = UserService()

@@ -44,7 +44,7 @@ def token_required(f):
 
 @auth_ns.route("/login")
 class LoginUser(Resource):
-
+    
     @auth_ns.doc(body=login_user_model)
     def post(self, *args, **kwargs) -> Response:
         """Logs the user and returns a token. Token needed to use the API."""
